@@ -1,0 +1,7 @@
+NAME="TigerOS Server"
+VERSION="40 (Arthur)"
+ID="TigerOS"
+VERSION_ID=40
+PRETTY_NAME="TigerOS 40 (Arthur)"
+ANSI_COLOR="0;34"
+CPE_NAME="cpe:/o:TigerOS:TigerOS:40"
