@@ -1,0 +1,30 @@
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Docker.gitlab-ci.yml
+
+# Build a Docker image with CI/CD and push to the GitLab registry.
+# Docker-in-Docker documentation: https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+#
+# This template uses one generic job with conditional builds
+# for the default branch and all other (MR) branches.
+
+# https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+container-build:
+  stage: build
+  image: quay.io/buildah/stable
+  variables:
+    # Use vfs with buildah. Docker offers overlayfs as a default, but Buildah
+    # cannot stack overlayfs on top of another overlayfs filesystem.
+    STORAGE_DRIVER: vfs
+    FQ_IMAGE_NAME: "$CI_REGISTRY_IMAGE"
+  before_script:
+    # GitLab container registry credentials taken from the
+    # [predefined CI/CD variables](../variables/index.md#predefined-cicd-variables)
+    # to authenticate to the registry.
+    - echo "$CI_REGISTRY_PASSWORD" | buildah login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - buildah images
+    - buildah build -t $FQ_IMAGE_NAME
+    - buildah images
+    - buildah push $FQ_IMAGE_NAME
