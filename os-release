@@ -1,6 +1,7 @@
 NAME="TigerOS Server"
 VERSION="40 (Arthur)"
-ID="TigerOS"
+ID="tigeros"
+ID_LIKE="fedora"
 VERSION_ID=40
 PLATFORM_ID="platform:f40"
 PRETTY_NAME="TigerOS 40 (Arthur)"
