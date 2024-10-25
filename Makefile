@@ -4,7 +4,7 @@ build-container:
 	sudo podman build -t tigeros-server:latest .
 
 
-build-image:
+build-qcow2:
 	sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v ./config.toml:/config.toml:ro -v ./output:/output -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest --type qcow2 --rootfs ext4 --local localhost/tigeros-server:latest
 
 build-iso:
