@@ -1,7 +1,10 @@
 
 
 build-container:
-	sudo podman build -t tigeros-server:latest .
+	sudo podman build -t tigeros-server:latest -d Containerfile.amd64 .
+
+build-container-arm:
+	sudo podman build --platform linux/arm64 -t tigeros-server:latest .
 
 
 build-qcow2:
