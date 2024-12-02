@@ -8,6 +8,7 @@ OS_CONTAINER_x86 = localhost/tigeros-server:amd64
 OS_CONTAINER_ARM = localhost/tigeros-server:arm64
 
 
+
 build-container:
 	sudo podman build -t "${OS_CONTAINER_x86}" -f Containerfile.amd64 .
 
@@ -21,8 +22,18 @@ build-qcow2:
 build-iso:
 	sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v ./config.toml:/config.toml:ro -v ./output:/output -v /var/lib/containers/storage:/var/lib/containers/storage "${BIB_CONTAINER}" --type anaconda-iso --rootfs ext4 --local localhost/tigeros-server:latest
 
+build-raw:
+	sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v ./config.toml:/config.toml:ro -v ./output:/output -v /var/lib/containers/storage:/var/lib/containers/storage "${BIB_CONTAINER}" --type raw --rootfs ext4 --local localhost/tigeros-server:latest
+
+build-raw-arm-pi:
+	sudo podman run --rm -it --privileged --pull=newer --security-opt label=type:unconfined_t -v ./config.toml:/config.toml:ro -v ./output:/output -v /var/lib/containers/storage:/var/lib/containers/storage "${BIB_CONTAINER}" --type raw --target-arch aarch64 --rootfs ext4 --partition-table-variant rpi --local "${OS_CONTAINER_ARM}"
+
+
 
 run-image:
 	qemu-system-x86_64 -M accel=kvm -cpu host -smp 2 -m 4096 -bios /usr/share/OVMF/OVMF_CODE.fd -nographic -snapshot output/qcow2/disk.qcow2
+
+run-image-debian:
+	qemu-system-x86_64 -M accel=kvm -cpu host -smp 2 -m 4096 -bios /usr/share/ovmf/OVMF.fd -nographic -snapshot output/qcow2/disk.qcow2
 
 all: build-container build-image
