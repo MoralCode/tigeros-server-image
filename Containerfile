@@ -3,7 +3,7 @@ FROM quay.io/fedora/fedora-bootc:40
 
 COPY os-release /usr/lib/os-release
 
-RUN dnf -y install git tree tailscale podman podman-compose NetworkManager-wifi && dnf clean all
+RUN dnf -y install git tree tailscale podman podman-compose NetworkManager-wifi rsync && dnf clean all && systemctl enable tailscaled
 
 # bootupd currently does not support Raspberry Pi-specific firmware and bootloader files.
 # This shim script copies the firmware and bootloader files to the correct location before
